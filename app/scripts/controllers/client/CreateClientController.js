@@ -205,30 +205,7 @@
                             scope.formData.clientExt.panForm = panFormObj.id;    
                         }           
 
-                
-
-
-                            
-                            
-
-
-                            
-                            
-                        
-                        
-                        
-
-
-
-
-
-
-
-
-
-
-
-            });
+                            });
 
             
             scope.autoFill = function (){
