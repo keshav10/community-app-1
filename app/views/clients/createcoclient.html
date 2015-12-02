@@ -59,7 +59,7 @@
                             class="required">*</span>Date of Birth</label></div>
                     <div class="col-md-3">
                         <input id="dateofbirth" type="text" name="dateofbirth" datepicker-pop="dd MMMM yyyy"
-                               ng-model="formData.coClientData[0].dateOfBirth" is-open="opened1" class="form-control"
+                               ng-model="formData.coClientData[0].dateOfBirth" is-open="opened1" class="form-control" ng-change="AgeCalculate()"
                                required
                                late-Validate/>
                         <form-validate valattributeform="createcoclientform" valattribute="dateofbirth"/>

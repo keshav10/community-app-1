@@ -86,6 +86,39 @@
                 scope.formData.familyDetails.splice(index, 1);
             };
 
+            scope.$watch('formData.nomineeDetails[0].dateOfBirth',function(){
+                scope.AgeCalculate(0);
+            });
+            scope.$watch('formData.nomineeDetails[1].dateOfBirth',function(){
+                scope.AgeCalculate(1);
+            });
+            scope.AgeCalculate = function(a){
+
+                scope.birthDate=[];
+                scope.todayDates=[];
+                if(a==0) {
+                    scope.date = dateFilter(this.formData.nomineeDetails[0].dateOfBirth, 'dd-MM-yyyy');
+                }
+                else{
+                    scope.date = dateFilter(this.formData.nomineeDetails[1].dateOfBirth, 'dd-MM-yyyy');
+                }
+                var today= dateFilter(new Date(),'dd-MM-yyyy');
+                scope.birthDate=scope.date.split('-');
+                scope.todayDates=today.split('-');
+                var age = scope.todayDates[2]-scope.birthDate[2];
+                var m = scope.todayDates[1] - scope.birthDate[1];
+                if (m < 0 || (m === 0 && scope.todayDates[0] < scope.birthDate[0])) {
+                    age--;
+                }
+                if(a==0) {
+                    this.formData.nomineeDetails[0].age = age;
+                }
+                else{
+                    this.formData.nomineeDetails[1].age = age;
+
+                }
+            }
+
             resourceFactory.clientResource.get({clientId: routeParams.id, template:'true', staffInSelectedOfficeOnly:true}, function (data) {
                 scope.offices = data.officeOptions;
                 scope.staffs = data.staffOptions;
@@ -126,7 +159,8 @@
                     externalId: data.externalId,
                     mobileNo: data.mobileNo,
                     savingsProductId: data.savingsProductId,
-                    genderId: data.gender.id
+                    genderId: data.gender.id,
+                    externalId2:data.externalId2
                 };
 
                 scope.formData.coClientData = [{}];
@@ -342,7 +376,7 @@
 
                 if(this.formData.naddress.length == 3) {
                     for (var i in scope.addressTypes) {
-                        if (scope.addressTypes[i].name == 'Spouse Address' && formData.naddress[2].district) {
+                        if (scope.addressTypes[i].name == 'Spouse Address' && this.formData.naddress[2].district) {
                             this.formData.naddress[2].addressType = scope.addressTypes[i].id;
                             break;
                         }
