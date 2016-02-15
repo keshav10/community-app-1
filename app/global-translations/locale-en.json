@@ -132,6 +132,8 @@
     "label.input.amount": "Amount",
     "label.input.branchoffice": "Branch office",
     "label.input.center": "Center",
+    "label.input.centerName": "Center Name",
+    "label.input.groupName":"Group Name",
     "label.input.group": "Group",
     "label.input.meetingcalendar": "Meeting calendar",
     "label.input.total": "Total",

@@ -289,7 +289,7 @@
                     idToNodeMap[data[i].id] = data[i];
                 }
                 scope.loanResource = function () {
-                    resourceFactory.loanResource.getAllLoans({"sqlSearch":"l.loan_status_id in (100,200)"},function (loanData) {
+                    resourceFactory.loanResource.getAllLoans({"sqlSearch":"l.loan_status_id in (100,200)","groupSearch":true,"orderBy" :"centerId"},function (loanData) {
                         scope.loans = loanData.pageItems;
                         for (var i in scope.loans) {
                             if (scope.loans[i].status.pendingApproval) {
@@ -319,9 +319,10 @@
             });
 
 
-            resourceFactory.clientResource.getAllClients({"sqlSearch":"c.status_enum like 100"},function (data) {
+            resourceFactory.clientResource.getAllClients({"sqlSearch":"c.status_enum like 100","groupSearch":true,"orderBy" :"centerId"},function (data) {
                 scope.groupedClients = _.groupBy(data.pageItems, "officeName");
             });
+                      //  changes office Name to centerName
 
             scope.search = function () {
                 scope.isCollapsed = true;
@@ -377,8 +378,12 @@
             };
 
             var ApproveLoanCtrl = function ($scope, $modalInstance) {
-                $scope.approve = function () {
-                    scope.bulkApproval();
+                $scope.date = {};
+                $scope.restrictDate = new Date();
+                $scope.date.approveDate = new Date();
+
+                $scope.approve = function (e) {
+                    scope.bulkApproval(e);
                     route.reload();
                     $modalInstance.close('approve');
                 };
@@ -387,8 +392,8 @@
                 };
             }
 
-            scope.bulkApproval = function () {
-                scope.formData.approvedOnDate = dateFilter(new Date(), scope.df);
+            scope.bulkApproval = function (e) {
+                scope.formData.approvedOnDate = dateFilter(e, scope.df);
                 scope.formData.dateFormat = scope.df;
                 scope.formData.locale = scope.optlang.code;
                 var selectedAccounts = 0;
@@ -435,8 +440,12 @@
             };
 
             var DisburseLoanCtrl = function ($scope, $modalInstance) {
-                $scope.disburse = function () {
-                    scope.bulkDisbursal();
+                $scope.date = {};
+                $scope.restrictDate = new Date();
+                $scope.date.disburseDate =new Date();
+                $scope.disburse = function (e) {
+
+                    scope.bulkDisbursal(e);
                     route.reload();
                     $modalInstance.close('disburse');
                 };
@@ -445,8 +454,8 @@
                 };
             }
 
-            scope.bulkDisbursal = function () {
-                scope.formData.actualDisbursementDate = dateFilter(new Date(), scope.df);
+            scope.bulkDisbursal = function (e) {
+                scope.formData.actualDisbursementDate = dateFilter(e, scope.df);
                 scope.formData.dateFormat = scope.df;
                 scope.formData.locale = scope.optlang.code;
 
