@@ -13,6 +13,32 @@
 
                     scope.responses = [];
 
+                    scope.$watch(function() {
+                        return $rootScope.failedResponses;
+                    }, function(failedResponses) {
+                        scope.responses = failedResponses;
+
+                        if(scope.responses.length > 0) {
+
+                            scope.uniqueId = [];
+
+                            //fills up the uniqueId array with unique identifiers
+                            for (var i = 0; i < scope.responses.length; i++) {
+                                for(var j = 0; j < scope.br.length; j++) {
+                                    if(scope.responses[i].requestId == scope.br[j].requestId) {
+                                        scope.uniqueId.push(JSON.parse(scope.br[j].body)[scope.identifier]);
+                                    }
+                                }
+                            }
+
+                            var template = '<div class="success" ng-show="successfulResponses.length < batchRequests.length">' +
+                                '<h4>Responses with listed <strong>'+scope.identifier+'s</strong> were successful</h4>' +
+                                '<span ng-repeat="id in uniqueId">{{id+" "}}</span>' +
+                                '</div>';
+
+                            elm.html('').append($compile(template)(scope));
+                        }
+                    });
                     // watch the rootScope variable "successfulResponses"
                     scope.$watch(function() {
                         return $rootScope.successfulResponses;
