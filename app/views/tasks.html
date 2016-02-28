@@ -186,6 +186,53 @@
 				        </tr>
 				    </table>
 				</tab>
+				<tab heading="{{'label.heading.loanapplication' | translate}}" has-permission='READ_LOAN'>
+					<div class="head-affix">
+						<table class="table condensed-table">
+							<thead>
+							<tr>
+								<th>
+									<input ng-autofocus="true" type="text" class="input-sm form-control" ng-model="filterText" type="text" ng-keyup="onFilter()"
+										   placeholder="{{'label.input.filterbyname' | translate}}">
+								</th>
+								<th>{{'label.input.office' | translate}}<span class="required">*</span></th>
+								<th><select chosen="offices" id="officeId" ng-model="formData.officeId " class="form-control"
+											ng-options="office.id as office.name for office in officesforDropDown" ng-change="changeoffice(formData.officeId)"
+											value="{{office.id}}"></select></th>
+
+							</tr>
+							</thead>
+						</table>
+					</div>
+					<div class=" col-sm=10">
+						<table class="table">
+							<thead>
+							<tr class="graybg">
+								<th>{{'label.heading.name' | translate}}</th>
+								<th> {{'label.heading.id' | translate}}</th>
+								<th> {{'label.heading.externalid' | translate}}</th>
+								<th>{{'label.heading.status' | translate}}</th>
+								<th>{{'label.heading.office' | translate}}</th>
+							</tr>
+							</thead>
+
+							<tbody>
+							<tr class="pointer-main" dir-paginate="center in centers | orderBy:'name':reverse  | filter:filterText |  itemsPerPage: centersPerPage" total-items="totalCenters" pagination-id="centers">
+								<td class="pointer" data-ng-click="routeToCenter(center.id)">{{center.name}}</td>
+								<td class="pointer" data-ng-click="routeToCenter(center.id)">{{center.id}}</td>
+								<td class="pointer" data-ng-click="routeToCenter(center.id)">{{center.externalId}}</td>
+								<td class="pointer" data-ng-click="routeToCenter(center.id)">
+									<i class="icon-stop {{center.status.code | StatusLookup}}"></i>&nbsp;&nbsp;{{center.status.value}}
+								</td>
+								<td class="pointer" data-ng-click="routeToCenter(center.id)">{{center.officeName}}</td>
+							</tr>
+							</tbody>
+						</table>
+						<dir-pagination-controls boundary-links="true" pagination-id="centers" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html" on-page-change="getResultsPage(newPageNumber)"></dir-pagination-controls>
+
+					</div>
+
+				</tab >
 				<tab heading="{{'label.heading.loanapproval' | translate}}" has-permission='READ_LOAN'>
 				    <div class="head-affix">
 				        <table class="table condensed-table">

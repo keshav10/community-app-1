@@ -12,7 +12,7 @@
             scope.loanApplicationCommonData = {};  // user set common data for all the loan applications
             scope.loanApplicationCommonData.submittedOnDate = new Date();
             scope.loanApplicationCommonData.expectedDisbursementDate = new Date();
-            // scope.loanApplicationCommonData.syncDisbursementWithMeeting = true;
+            //scope.loanApplicationCommonData.syncDisbursementWithMeeting = true;
             scope.groupName='';
             scope.clients=[];
             scope.selectedClients=[];
@@ -52,25 +52,23 @@
                     for(var i in data.product.charges){
                         scope.chargeName=scope.chargeName+data.product.charges[i].name;
                     }
-                    scope.previewRepayments(null,data.principal,scope.groups[0].activeClientMembers[0].id,data.product.charges);
+                    scope.previewRepayments(null,data.principal,scope.groups[0].activeClientMembers[0].id,data.product.charges,null);
                     for( var i in scope.groups ) {
-                        // for (var j in scope.groups[i].activeClientMembers) {
                         scope.clients[i] = scope.groups[i].activeClientMembers.map(function (client) {
                             client.principal = data.product.principal;
+                            client.groupId=scope.groups[i].id;
                             client.charges = data.product.charges.map(function (charge) {
                                 charge.isDeleted = false;
                                 return _.clone(charge);
                             });
                             scope.selectedClients.push(client);
+                            scope.selectedClients1.push(client);
                             return client;
 
                         });
-                        //}
 
-                        scope.groups[i].activeClientMembers=scope.selectedClients;
-                        scope.selectedClients='';
-                        scope.selectedClients =[];
-
+                        scope.groups[i].activeClientMembers=scope.selectedClients1;
+                        scope.selectedClients1 =[];
                     }
 
 
@@ -78,19 +76,26 @@
             };
 
 
-            scope.selectgroup=function(index){
-                scope.groups[index].groupselected =true;
-                scope.index1=0;
-                angular.forEach(scope.groups[index].activeClientMembers, function (item) {
-                    if(!angular.isUndefined(scope.groups[index].activeClientMembers[scope.index1].isSelected)){
-                        scope.groups[index].activeClientMembers[scope.index1].isSelected = true;
-                        scope.index1++;
-                    }
-                    else {
-                        scope.groups[index].activeClientMembers[scope.index1].isSelected = true;
-                        scope.index1++;
-                    }
-                });
+            scope.selectgroup=function(index,groupId){
+                if(groupId!=null){
+                    scope.groups[index].isSelected=false;
+                }else{
+                    scope.groups[index].isSelected=true;
+                }
+                if(groupId==null) {
+                    scope.index1 = 0;
+                    angular.forEach(scope.groups[index].activeClientMembers, function (item) {
+                        if (!angular.isUndefined(scope.groups[index].activeClientMembers[scope.index1].isSelected)) {
+                            scope.groups[index].activeClientMembers[scope.index1].isSelected = true;
+                            scope.index1++;
+                        }
+                        else {
+                            scope.groups[index].activeClientMembers[scope.index1].isSelected = true;
+                            scope.index1++;
+                        }
+                    });
+                }
+
             }
 
             scope.toggleCharge = function (groupIndex,clientIndex, chargeIndex) {
@@ -102,7 +107,7 @@
                 }
 
             };
-            scope.previewRepayments = function (outerIndex,principal,clientId,charges1) {
+            scope.previewRepayments = function (outerIndex,principal,clientId,charges1,selectedgroupIndex) {
                 delete scope.formData.charges;
                 this.formData.amortizationType = scope.productDetails.amortizationType.id;
                 this.formData.clientId = clientId;
@@ -111,7 +116,7 @@
                     scope.charges = charges1;
                 }
                 else{
-                    scope.charges = scope.selectedClients[0].charges;
+                    scope.charges =  scope.groups[selectedgroupIndex].activeClientMembers[outerIndex].charges;
                 }
                 scope.formData.charges = [];
                 for (var i in scope.charges) {
@@ -136,7 +141,7 @@
                     this.formData.principal = principal;
                 }
                 else{
-                    this.formData.principal= scope.selectedClients[outerIndex].principal;
+                    this.formData.principal= scope.groups[selectedgroupIndex].activeClientMembers[outerIndex].principal;
                 }
                 this.formData.expectedDisbursementDate = dateFilter(scope.loanApplicationCommonData.expectedDisbursementDate, scope.df);
                 this.formData.submittedOnDate =  dateFilter(scope.loanApplicationCommonData.submittedOnDate, scope.df);
@@ -175,7 +180,9 @@
                         loanApplication.dateFormat =  scope.df;
                         loanApplication.groupId = scope.selectedClients[i].groupId;
                         loanApplication.clientId =  scope.selectedClients[i].id;
-                        loanApplication.calendarId = scope.caledars[0].id;
+                        if(scope.caledars) {
+                            loanApplication.calendarId = scope.caledars[0].id;
+                        }
                         loanApplication.loanType = 'jlg';
                         loanApplication.productId = scope.productDetails.id;
                         loanApplication.fundId = scope.loanApplicationCommonData.fundId;
@@ -198,8 +205,8 @@
                         loanApplication.expectedDisbursementDate = dateFilter(scope.loanApplicationCommonData.expectedDisbursementDate, scope.df);
                         loanApplication.submittedOnDate =  dateFilter(scope.loanApplicationCommonData.submittedOnDate, scope.df);
                         loanApplication.syncDisbursementWithMeeting = scope.loanApplicationCommonData.syncDisbursementWithMeeting;
-                        loanApplication.interestChargedFromDate =  dateFilter( scope.loanApplicationCommonData.firstrepaymentDate, scope.df);
-                        loanApplication.repaymentsStartingFromDate =  dateFilter(scope.loanApplicationCommonData.interestchargedfrom, scope.df);
+                        loanApplication.interestChargedFromDate =  dateFilter(scope.loanApplicationCommonData.interestchargedfrom, scope.df);
+                        loanApplication.repaymentsStartingFromDate =  dateFilter( scope.loanApplicationCommonData.firstrepaymentDate, scope.df);
                         loanApplication.externalId=scope.selectedClients[i].extId;
 
                         loanApplication.charges = [];
@@ -256,6 +263,4 @@
     mifosX.ng.application.controller('NewJLGLoanAccountCenterBy', ['$scope', '$rootScope', '$routeParams', 'ResourceFactory', '$location', 'dateFilter', mifosX.controllers.NewJLGLoanAccountCenterBy]).run(function ($log) {
         $log.info("NewJLGLoanAccountCenterBy initialized");
     });
-}(mifosX.controllers || {}));/**
- * Created by CONFLUX 23 on 28-02-2016.
- */
+}(mifosX.controllers || {}));

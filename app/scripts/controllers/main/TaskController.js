@@ -15,6 +15,10 @@
             scope.restrictDate = new Date();
             //this value will be changed within each specific tab
             scope.requestIdentifier = "loanId";
+            scope.centersPerPage = 15;
+            scope.centers = [];
+            scope.actualCenters = [];
+
 
             resourceFactory.checkerInboxResource.get({templateResource: 'searchtemplate'}, function (data) {
                 scope.checkerTemplate = data;
@@ -22,6 +26,58 @@
             resourceFactory.checkerInboxResource.search(function (data) {
                 scope.searchData = data;
             });
+            /* for displaying centers*/
+            var requestParams = {staffInSelectedOfficeOnly:true};
+            resourceFactory.clientTemplateResource.get(requestParams, function (clientData) {
+                data = clientData.clientBasicDetails;
+                scope.officesforDropDown = data.officeOptions;
+                //scope.formData.officeId = scope.offices[0].id;
+
+            });
+            scope.filterText = scope.searchCriteria.centers;
+
+            scope.onFilter = function () {
+                scope.searchCriteria.centers = scope.filterText;
+                scope.saveSC();
+            };
+            scope.getResultsPage = function (pageNumber) {
+                if(scope.searchText){
+                    var startPosition = (pageNumber - 1) * scope.centersPerPage;
+                    scope.centers = scope.actualCenters.slice(startPosition, startPosition + scope.centersPerPage);
+                    return;
+                }
+                var items = resourceFactory.centerResource.get({
+                    offset: ((pageNumber - 1) * scope.centersPerPage),
+                    limit: scope.centersPerPage,
+                    paged: 'true',
+                    orderBy: 'name',
+                    sortOrder: 'ASC'
+                }, function (data) {
+                    scope.centers = data.pageItems;
+                });
+            }
+            scope.initPage = function (officeId) {
+                var items = resourceFactory.centerResource.get({
+                    officeId: officeId,
+                    offset: 0,
+                    limit: scope.centersPerPage,
+                    paged: 'true',
+                    orderBy: 'name',
+                    sortOrder: 'ASC'
+                }, function (data) {
+                    scope.totalCenters = data.totalFilteredRecords;
+                    scope.centers = data.pageItems;
+                });
+            }
+            scope.changeoffice=function(officeId){
+                scope.initPage(officeId);
+            }
+            scope.initPage(scope.formData.officeId);
+            scope.viewUser = function (item) {
+                scope.userTypeahead = true;
+                scope.formData.user = item.id;
+            };
+            //displaying center
             scope.viewUser = function (item) {
                 scope.userTypeahead = true;
                 scope.formData.user = item.id;
@@ -280,6 +336,10 @@
 
             scope.routeToClient = function (id) {
                 location.path('viewclient/' + id);
+            };
+            scope.routeToCenter = function(id){
+                location.path('viewcenter/' + id);
+
             };
 
             resourceFactory.officeResource.getAllOffices(function (data) {
