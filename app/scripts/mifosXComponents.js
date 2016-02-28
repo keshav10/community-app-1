@@ -38,6 +38,7 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'loanAccount/LoanDocumentController',
             'loanAccount/ViewLoanTransactionController',
             'loanAccount/LoanScreenReportController',
+            'loanAccount/NewJLGLoanAccountCenterBy',
             'groups/AssignStaffController',
             'client/ClientController',
             'client/EditClientController',

@@ -2031,6 +2031,7 @@
     "label.heading.givenname": "Given Name",
     "label.heading.usersettings": "User Settings",
     "label.heading.email": "Email",
+    "label.heading.emi":"Emi",
     "label.heading.changepassword": "Change Password",
     "label.heading.roles":"Roles",
     "label.heading.officetoloanproducts":"Office access to loan products",
