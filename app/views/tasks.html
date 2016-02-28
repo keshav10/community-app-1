@@ -182,7 +182,6 @@
 				                        <td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="client.centerName && client.groupName">{{client.displayName}} &nbsp; ({{client.centerName}} &nbsp; / &nbsp; {{client.groupName}}) </td>
 										<td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="!client.centerName && client.groupName">{{client.displayName}} &nbsp; ( {{client.groupName}}) </td>
 										<td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="!client.centerName && !client.groupName">{{client.displayName}}  </td>
-										<td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="client.centerName && !client.groupName">{{client.displayName}} &nbsp;({{client.centerName}}) </td>
 										<td class="pointer" data-ng-click="routeToClient(client.id)">{{client.accountNo}}</td>
 				                        <td class="pointer" data-ng-click="routeToClient(client.id)">{{client.staffName}}</td>
 				                    </tr>
@@ -255,7 +254,6 @@
 				                        <td class="pointer"  ng-if="loan.centerName && loan.group.name "><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}} &nbsp;&nbsp; ( {{loan.centerName}} &nbsp;/&nbsp; {{loan.group.name}}) </a></td>
 										<td class="pointer" ng-if="!loan.centerName && loan.group.name "><a href='#/viewclient/{{loan.clientId}}' >{{loan.clientName}} &nbsp;&nbsp; ( {{loan.group.name}}) </a></td>
 										<td class="pointer"  ng-if=" !loan.centerName && !loan.group.name "><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}}</a></td>
-										<td class="pointer"  ng-if=" loan.centerName && !loan.group.name" ><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}}&nbsp;&nbsp;( {{loan.centerName}}) </a></td>
 										<td class="pointer"><a href='#/viewloanaccount/{{loan.id}}'>{{loan.loanProductName}}({{loan.accountNo}})</a>
 				                        </td>
 				                        <td class="pointer">{{loan.principal | number}}</td>
@@ -322,7 +320,6 @@
 								<td class="pointer"  ng-if="loan.group.name && loan.centerName"><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}} &nbsp;&nbsp; ( {{loan.centerName}} &nbsp;/&nbsp; {{loan.group.name}}) </a></td>
 								<td class="pointer" ng-if="loan.group.name && !loan.centerName"><a href='#/viewclient/{{loan.clientId}}' >{{loan.clientName}} &nbsp;&nbsp;( {{loan.group.name}}) </a></td>
 								<td class="pointer" ng-if="!loan.group.name && !loan.centerName"><a href='#/viewclient/{{loan.clientId}}' >{{loan.clientName}}</a></td>
-								<td class="pointer"  ng-if=" loan.centerName && !loan.group.name" ><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}}&nbsp;&nbsp;( {{loan.centerName}}) </a></td>
 								<td><a href="#/viewloanaccount/{{loan.id}}">{{loan.accountNo}}</a></td>
 				                <td><a href="#/viewloanaccount/{{loan.id}}">{{loan.loanProductName}}</a></td>
 				                <td>{{loan.principal | number}}</td>

@@ -13,32 +13,46 @@
 
                     scope.responses = [];
 
+                    scope.failedresponse=[];
+
                     scope.$watch(function() {
                         return $rootScope.failedResponses;
                     }, function(failedResponses) {
-                        scope.responses = failedResponses;
+                        scope.failedresponse = failedResponses;
 
-                        if(scope.responses.length > 0) {
+                        if(scope.failedresponse.length > 0) {
 
                             scope.uniqueId = [];
+                            scope.uniqueId1=[];
+                            scope.er=[];
+
 
                             //fills up the uniqueId array with unique identifiers
-                            for (var i = 0; i < scope.responses.length; i++) {
+                            for (var i = 0; i < scope.failedresponse.length; i++) {
                                 for(var j = 0; j < scope.br.length; j++) {
-                                    if(scope.responses[i].requestId == scope.br[j].requestId) {
-                                        scope.uniqueId.push(JSON.parse(scope.br[j].body)[scope.identifier]);
-                                    }
+                                    if(scope.failedresponse[i].requestId == scope.br[j].requestId) {
+                                        if(scope.failedresponse[i].statusCode!=200) {
+                                            var error={};
+                                            scope.t=scope.br[j].body;
+                                            error.clientId=JSON.parse(scope.br[j].body)[scope.identifier];
+                                            scope.er=JSON.parse(scope.failedresponse[i].body)['errors'];
+                                            error.errorMessage=scope.er[0].defaultUserMessage;
+                                               scope.uniqueId.push(JSON.parse(scope.br[j].body)[scope.identifier]);
+                                            scope.uniqueId1.push(error)
+
+                                        }                                    }
                                 }
                             }
 
-                            var template = '<div class="success" ng-show="successfulResponses.length < batchRequests.length">' +
-                                '<h4>Responses with listed <strong>'+scope.identifier+'s</strong> were successful</h4>' +
-                                '<span ng-repeat="id in uniqueId">{{id+" "}}</span>' +
+                            var template = '<div class="error" ng-show="failedResponses.length < batchRequests.length">' +
+                                '<h4>Error </h4>' +
+                                '<span ng-repeat="errorArray in errorDetails">{{errorArray.userMessageGlobalisationCode}}</span>'+
                                 '</div>';
 
                             elm.html('').append($compile(template)(scope));
                         }
                     });
+
                     // watch the rootScope variable "successfulResponses"
                     scope.$watch(function() {
                         return $rootScope.successfulResponses;
