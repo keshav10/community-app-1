@@ -338,7 +338,7 @@
                 location.path('viewclient/' + id);
             };
             scope.routeToCenter = function(id){
-                location.path('viewcenter/' + id);
+                location.path('jlgloanAccountcenterby/' + id);
 
             };
 

@@ -2039,6 +2039,7 @@
     "label.heading.officetocharges":"Office access to charges",
     "label.heading.roletoloanproducts":"Role access to loan products",
     "label.heading.roletosavingsproducts":"Role access to savings products",
+    "label.heading.repaymentinfo" :"Repayment Info",
 
     "#Anchors": "..",
     "label.anchor.users": "Users",
