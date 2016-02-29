@@ -13,6 +13,7 @@
             scope.isCollapsed = true;
             scope.approveData = {};
             scope.restrictDate = new Date();
+           // scope.batchRequests=[];
             //this value will be changed within each specific tab
             scope.requestIdentifier = "loanId";
 
@@ -373,6 +374,7 @@
                     $modal.open({
                         templateUrl: 'approveloan.html',
                         controller: ApproveLoanCtrl
+
                     });
                 }
             };
@@ -384,7 +386,6 @@
 
                 $scope.approve = function (e) {
                     scope.bulkApproval(e);
-                    route.reload();
                     $modalInstance.close('approve');
                 };
                 $scope.cancel = function () {
@@ -417,12 +418,13 @@
 
                 resourceFactory.batchResource.post(scope.batchRequests, function (data) {
                     for(var i = 0; i < data.length; i++) {
-                        if(data[i].statusCode = '200') {
+                        if(data[i].statusCode ==200) {
                             approvedAccounts++;
                             data[i].body = JSON.parse(data[i].body);
                             scope.loanTemplate[data[i].body.loanId] = false;
                             if (selectedAccounts == approvedAccounts) {
                                 scope.loanResource();
+                                route.reload();
                             }
                         }
                         
@@ -446,7 +448,6 @@
                 $scope.disburse = function (e) {
 
                     scope.bulkDisbursal(e);
-                    route.reload();
                     $modalInstance.close('disburse');
                 };
                 $scope.cancel = function () {
@@ -486,6 +487,7 @@
                             scope.loanDisbursalTemplate[data[i].body.loanId] = false;
                             if (selectedAccounts == approvedAccounts) {
                                 scope.loanResource();
+                                route.reload();
                             }
                         }
                         
@@ -495,7 +497,7 @@
 
         }
     });
-    mifosX.ng.application.controller('TaskController', ['$scope', 'ResourceFactory', '$route', 'dateFilter', '$modal', '$location', mifosX.controllers.TaskController]).run(function ($log) {
+    mifosX.ng.application.controller('TaskController', ['$scope', 'ResourceFactory', '$route', 'dateFilter', '$modal', '$location','$rootScope', mifosX.controllers.TaskController]).run(function ($log) {
         $log.info("TaskController initialized");
     });
 }(mifosX.controllers || {}));

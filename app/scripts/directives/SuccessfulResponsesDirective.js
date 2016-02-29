@@ -44,9 +44,9 @@
                                 }
                             }
 
-                            var template = '<div class="error" ng-show="failedResponses.length < batchRequests.length">' +
+                            var template = '<div class="error" ng-show="failedResponses.length <= batchRequests.length">' +
                                 '<h4>Error </h4>' +
-                                '<span ng-repeat="errorArray in errorDetails">{{errorArray.userMessageGlobalisationCode}}</span>'+
+                                '<span ng-repeat="errorArray in uniqueId1">{{errorArray.errorMessage}}</span>'+
                                 '</div>';
 
                             elm.html('').append($compile(template)(scope));
