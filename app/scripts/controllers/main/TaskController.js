@@ -456,9 +456,10 @@
             }
 
             scope.bulkDisbursal = function (e) {
-                scope.formData.actualDisbursementDate = dateFilter(e, scope.df);
-                scope.formData.dateFormat = scope.df;
-                scope.formData.locale = scope.optlang.code;
+                scope.disburseData={};
+                scope.disburseData.actualDisbursementDate = dateFilter(e, scope.df);
+                scope.disburseData.dateFormat = scope.df;
+                scope.disburseData.locale = scope.optlang.code;
 
                 var selectedAccounts = 0;
                 var approvedAccounts = 0;
@@ -475,7 +476,7 @@
                 _.each(scope.loanDisbursalTemplate, function (value, key) { 
                     if (value == true) {
                         scope.batchRequests.push({requestId: reqId++, relativeUrl: "loans/"+key+"?command=disburse", 
-                        method: "POST", body: JSON.stringify(scope.formData)});                        
+                        method: "POST", body: JSON.stringify(scope.disburseData)});
                     }
                 });
 

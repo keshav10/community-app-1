@@ -6,9 +6,7 @@
     <div class="well">
 		<fieldset>
 			<legend>{{'label.heading.pendingtasks' | translate}}</legend>
-			<api-validate></api-validate>
 			<successful-responses/></successful-responses>
-
 			<tabset tabset-name="taskTabset">
 				<tab heading="{{'label.heading.checkerinbox' | translate}}" has-permission='ALL_FUNCTIONS_READ' >
 				    <div class="head-affix">
@@ -78,7 +76,6 @@
             <h3 class="bolder">{{'label.heading.delete' | translate}}</h3>
         </div>
         <div class="modal-body">
-            <api-validate></api-validate>
             <br>
             <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
             <button class="btn btn-primary" ng-click="delete()">{{'label.button.confirm' | translate}}</button>
@@ -89,7 +86,6 @@
             <h3 class="bolder">{{'label.heading.approve' | translate}}</h3>
         </div>
         <div class="modal-body">
-            <api-validate></api-validate>
             <br>
             <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
             <button class="btn btn-primary" ng-click="approve()">{{'label.button.confirm' | translate}}</button>
@@ -146,7 +142,6 @@
                 translate}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
         </div>
         <div class="modal-body modal-big">
-            <api-validate></api-validate>
             <br>
             <input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.actDate" is-open="opened"
                    max="restrictDate"/>
@@ -215,7 +210,6 @@
 				            <h3 class="bolder">{{'label.heading.approve' | translate}}</h3>
 				        </div>
 						<div class="modal-body modal-big">
-							<api-validate></api-validate>
 							<br>
 							<tr><td>{{'label.heading.approvedondate'|translate}}</td><td>
 							<input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.approveDate" is-open="opened"
@@ -223,7 +217,6 @@
 							</tr>
 						</div>
 				        <div class="modal-footer">
-				            <api-validate></api-validate>
 				            <br>
 				            <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
 				            <button class="btn btn-primary" ng-click="approve(date.approveDate)">{{'label.button.confirm' | translate}}</button>
@@ -289,7 +282,7 @@
 				            <h3 class="bolder">{{'label.heading.disburse' | translate}}</h3>
 				        </div>
 						<div class="modal-body modal-big">
-							<api-validate></api-validate>
+
 							<br>
 							<tr><td>{{'label.heading.disbursedondate'|translate}}</td><td>
 							<input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.disburseDate" is-open="opened"
@@ -297,7 +290,7 @@
 							</tr>
 						</div>
 				        <div class="modal-footer">
-				            <api-validate></api-validate>
+
 				            <br>
 				            <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
 				            <button class="btn btn-primary" ng-click="disburse(date.disburseDate)">{{'label.button.confirm' | translate}}</button>

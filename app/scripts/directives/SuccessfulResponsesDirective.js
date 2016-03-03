@@ -35,18 +35,28 @@
                                             var error={};
                                             scope.t=scope.br[j].body;
                                             error.clientId=JSON.parse(scope.br[j].body)[scope.identifier];
-                                            scope.er=JSON.parse(scope.failedresponse[i].body)['errors'];
-                                            error.errorMessage=scope.er[0].defaultUserMessage;
-                                               scope.uniqueId.push(JSON.parse(scope.br[j].body)[scope.identifier]);
-                                            scope.uniqueId1.push(error)
+                                            if( !angular.isUndefined(JSON.parse(scope.failedresponse[i].body)['errors']))
+                                            {
+                                                scope.er = JSON.parse(scope.failedresponse[i].body)['errors'];
+                                                error.errorMessage = scope.er[0].defaultUserMessage;
+                                                error.requestId = scope.failedresponse[i].requestId;
+                                                error.identifier=JSON.parse(scope.br[j].body)[scope.identifier];
+                                                scope.uniqueId1.push(error)
 
-                                        }                                    }
+                                            }
+                                            else{
+                                                error.errorMessage = scope.failedresponse[i].body;
+                                                error.requestId = scope.failedresponse[i].requestId;
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
                             var template = '<div class="error" ng-show="failedResponses.length <= batchRequests.length">' +
                                 '<h4>Error </h4>' +
-                                '<span ng-repeat="errorArray in uniqueId1">{{errorArray.errorMessage}}</span>'+
+                                '<span ng-repeat="errorArray in uniqueId1">RequestId &nbsp;{{errorArray.requestId}}&nbsp;{{errorArray.errorMessage}} <br></span>'+
+                                '<ul></ul>'+
                                 '</div>';
 
                             elm.html('').append($compile(template)(scope));
