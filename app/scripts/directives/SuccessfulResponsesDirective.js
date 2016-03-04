@@ -40,6 +40,7 @@
                                                 scope.er = JSON.parse(scope.failedresponse[i].body)['errors'];
                                                 error.errorMessage = scope.er[0].defaultUserMessage;
                                                 error.requestId = scope.failedresponse[i].requestId;
+
                                                 scope.uniqueId1.push(error)
 
                                             }
@@ -52,10 +53,13 @@
                                     }
                                }
 
+
+
                             var template = '<div class="error" ng-show="failedResponses.length <= batchRequests.length">' +
                                 '<h4>Error </h4>' +
                                 '<span ng-repeat="errorArray in uniqueId1">RequestId &nbsp;{{errorArray.requestId}}&nbsp;{{errorArray.errorMessage}} <br></span>'+
-                                    '<ul></ul>'+
+
+                                 '<ul></ul>'+
                                 '</div>';
 
                             elm.html('').append($compile(template)(scope));

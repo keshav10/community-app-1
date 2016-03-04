@@ -13,6 +13,7 @@
             scope.isCollapsed = true;
             scope.approveData = {};
             scope.restrictDate = new Date();
+           // scope.batchRequests=[];
             //this value will be changed within each specific tab
             scope.requestIdentifier = "loanId";
             scope.centersPerPage = 15;
@@ -349,7 +350,7 @@
                     idToNodeMap[data[i].id] = data[i];
                 }
                 scope.loanResource = function () {
-                    resourceFactory.loanResource.getAllLoans(function (loanData) {
+                    resourceFactory.loanResource.getAllLoans({"sqlSearch":"l.loan_status_id in (100,200)","groupSearch":true,"orderBy" :"centerId"},function (loanData) {
                         scope.loans = loanData.pageItems;
                         for (var i in scope.loans) {
                             if (scope.loans[i].status.pendingApproval) {
@@ -379,9 +380,10 @@
             });
 
 
-            resourceFactory.clientResource.getAllClients(function (data) {                
-                scope.groupedClients = _.groupBy(data.pageItems, "officeName");               
+            resourceFactory.clientResource.getAllClients({"sqlSearch":"c.status_enum like 100","groupSearch":true,"orderBy" :"centerId"},function (data) {
+                scope.groupedClients = _.groupBy(data.pageItems, "officeName");
             });
+                      //  changes office Name to centerName
 
             scope.search = function () {
                 scope.isCollapsed = true;
@@ -432,14 +434,18 @@
                     $modal.open({
                         templateUrl: 'approveloan.html',
                         controller: ApproveLoanCtrl
+
                     });
                 }
             };
 
             var ApproveLoanCtrl = function ($scope, $modalInstance) {
-                $scope.approve = function () {
-                    scope.bulkApproval();
-                    route.reload();
+                $scope.date = {};
+                $scope.restrictDate = new Date();
+                $scope.date.approveDate = new Date();
+
+                $scope.approve = function (e) {
+                    scope.bulkApproval(e);
                     $modalInstance.close('approve');
                 };
                 $scope.cancel = function () {
@@ -447,8 +453,8 @@
                 };
             }
 
-            scope.bulkApproval = function () {
-                scope.formData.approvedOnDate = dateFilter(new Date(), scope.df);
+            scope.bulkApproval = function (e) {
+                scope.formData.approvedOnDate = dateFilter(e, scope.df);
                 scope.formData.dateFormat = scope.df;
                 scope.formData.locale = scope.optlang.code;
                 var selectedAccounts = 0;
@@ -472,12 +478,13 @@
 
                 resourceFactory.batchResource.post(scope.batchRequests, function (data) {
                     for(var i = 0; i < data.length; i++) {
-                        if(data[i].statusCode = '200') {
+                        if(data[i].statusCode ==200) {
                             approvedAccounts++;
                             data[i].body = JSON.parse(data[i].body);
                             scope.loanTemplate[data[i].body.loanId] = false;
                             if (selectedAccounts == approvedAccounts) {
                                 scope.loanResource();
+                                route.reload();
                             }
                         }
                         
@@ -495,9 +502,12 @@
             };
 
             var DisburseLoanCtrl = function ($scope, $modalInstance) {
-                $scope.disburse = function () {
-                    scope.bulkDisbursal();
-                    route.reload();
+                $scope.date = {};
+                $scope.restrictDate = new Date();
+                $scope.date.disburseDate =new Date();
+                $scope.disburse = function (e) {
+
+                    scope.bulkDisbursal(e);
                     $modalInstance.close('disburse');
                 };
                 $scope.cancel = function () {
@@ -505,10 +515,11 @@
                 };
             }
 
-            scope.bulkDisbursal = function () {
-                scope.formData.actualDisbursementDate = dateFilter(new Date(), scope.df);
-                scope.formData.dateFormat = scope.df;
-                scope.formData.locale = scope.optlang.code;
+            scope.bulkDisbursal = function (e) {
+                scope.disburseData={};
+                scope.disburseData.actualDisbursementDate = dateFilter(e, scope.df);
+                scope.disburseData.dateFormat = scope.df;
+                scope.disburseData.locale = scope.optlang.code;
 
                 var selectedAccounts = 0;
                 var approvedAccounts = 0;
@@ -525,7 +536,7 @@
                 _.each(scope.loanDisbursalTemplate, function (value, key) { 
                     if (value == true) {
                         scope.batchRequests.push({requestId: reqId++, relativeUrl: "loans/"+key+"?command=disburse", 
-                        method: "POST", body: JSON.stringify(scope.formData)});                        
+                        method: "POST", body: JSON.stringify(scope.disburseData)});
                     }
                 });
 
@@ -537,6 +548,7 @@
                             scope.loanDisbursalTemplate[data[i].body.loanId] = false;
                             if (selectedAccounts == approvedAccounts) {
                                 scope.loanResource();
+                                route.reload();
                             }
                         }
                         
@@ -546,7 +558,7 @@
 
         }
     });
-    mifosX.ng.application.controller('TaskController', ['$scope', 'ResourceFactory', '$route', 'dateFilter', '$modal', '$location', mifosX.controllers.TaskController]).run(function ($log) {
+    mifosX.ng.application.controller('TaskController', ['$scope', 'ResourceFactory', '$route', 'dateFilter', '$modal', '$location','$rootScope', mifosX.controllers.TaskController]).run(function ($log) {
         $log.info("TaskController initialized");
     });
 }(mifosX.controllers || {}));

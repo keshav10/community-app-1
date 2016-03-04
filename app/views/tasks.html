@@ -2,11 +2,11 @@
 	<ul class="breadcrumb">
         <li class="active">{{'label.anchor.tasks' | translate}}</li>
     </ul>
-    <successful-responses/></successful-responses>
+
     <div class="well">
 		<fieldset>
 			<legend>{{'label.heading.pendingtasks' | translate}}</legend>
-			<api-validate></api-validate>
+			<successful-responses/></successful-responses>
 			<tabset tabset-name="taskTabset">
 				<tab heading="{{'label.heading.checkerinbox' | translate}}" has-permission='ALL_FUNCTIONS_READ' >
 				    <div class="head-affix">
@@ -76,18 +76,16 @@
             <h3 class="bolder">{{'label.heading.delete' | translate}}</h3>
         </div>
         <div class="modal-body">
-            <api-validate></api-validate>
             <br>
             <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
             <button class="btn btn-primary" ng-click="delete()">{{'label.button.confirm' | translate}}</button>
         </div>
     </script>
-				    <script type="text/ng-template" id="approvechecker.html">
+		  <script type="text/ng-template" id="approvechecker.html">
         <div class="modal-header silver">
             <h3 class="bolder">{{'label.heading.approve' | translate}}</h3>
         </div>
         <div class="modal-body">
-            <api-validate></api-validate>
             <br>
             <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
             <button class="btn btn-primary" ng-click="approve()">{{'label.button.confirm' | translate}}</button>
@@ -144,9 +142,8 @@
                 translate}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
         </div>
         <div class="modal-body modal-big">
-            <api-validate></api-validate>
             <br>
-            <input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.actDate" is-open="opened" min="restrictDate"
+            <input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.actDate" is-open="opened"
                    max="restrictDate"/>
         </div>
         <div class="modal-footer">
@@ -154,8 +151,9 @@
             <button class="btn btn-primary" ng-click="approve(date.actDate)">{{'label.button.confirm' | translate}}
             </button>
         </div>
-    </script>
-				    <table class="table condensed-table" ng-repeat="(officeName,values) in groupedClients">
+    </script>   <!---new added-->
+
+				    	<table class="table condensed-table" ng-repeat="(officeName,values) in groupedClients " >
 				        <tr>
 				            <td>
 				                <strong>{{officeName}}</strong>
@@ -167,17 +165,19 @@
 				                    <thead>
 				                    <tr class="graybg">
 				                        <th><input type="checkbox" ng-click="clientApprovalAllCheckBoxesClicked(officeName)" ng-checked="clientApprovalAllCheckBoxesMet(officeName)"/></th>
-				                        <th>{{'label.heading.name' | translate}}</th>
+				                        <th>{{'label.heading.name' | translate}} &nbsp;({{'label.input.centerName'|translate}}  / {{'label.input.groupName'|translate}})</th>
 				                        <th>{{'label.heading.accnum' | translate}}</th>
 				                        <th>{{'label.heading.staff' | translate}}</th>
 				                    </tr>
 				                    </thead>
 				                    <tbody>
 				                    <tr class="pointer-main"
-				                        data-ng-repeat="client in values  | filter : {active: 'false', status.value:'Pending'} | filter:filterText">
+				                        data-ng-repeat="client in values  | filter : {active: 'false', status.value:'Pending'} | filter:filterText |orderBy:values.centerId">
 				                        <td><input type="checkbox" data-ng-model="approveData[client.id]"/></td>
-				                        <td class="pointer" data-ng-click="routeToClient(client.id)">{{client.displayName}}</td>
-				                        <td class="pointer" data-ng-click="routeToClient(client.id)">{{client.accountNo}}</td>
+				                        <td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="client.centerName && client.groupName">{{client.displayName}} &nbsp; ({{client.centerName}} &nbsp; / &nbsp; {{client.groupName}}) </td>
+										<td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="!client.centerName && client.groupName">{{client.displayName}} &nbsp; ( {{client.groupName}}) </td>
+										<td class="pointer" data-ng-click="routeToClient(client.id)" ng-if="!client.centerName && !client.groupName">{{client.displayName}}  </td>
+										<td class="pointer" data-ng-click="routeToClient(client.id)">{{client.accountNo}}</td>
 				                        <td class="pointer" data-ng-click="routeToClient(client.id)">{{client.staffName}}</td>
 				                    </tr>
 				                    </tbody>
@@ -185,6 +185,7 @@
 				            </td>
 				        </tr>
 				    </table>
+
 				</tab>
 				<tab heading="{{'label.heading.loanapplication' | translate}}" has-permission='READ_LOAN'>
 					<div class="head-affix">
@@ -255,11 +256,17 @@
 				        <div class="modal-header silver">
 				            <h3 class="bolder">{{'label.heading.approve' | translate}}</h3>
 				        </div>
-				        <div class="modal-body">
-				            <api-validate></api-validate>
+						<div class="modal-body modal-big">
+							<br>
+							<tr><td>{{'label.heading.approvedondate'|translate}}</td><td>
+							<input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.approveDate" is-open="opened"
+								   max="restrictDate"/></td>
+							</tr>
+						</div>
+				        <div class="modal-footer">
 				            <br>
 				            <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
-				            <button class="btn btn-primary" ng-click="approve()">{{'label.button.confirm' | translate}}</button>
+				            <button class="btn btn-primary" ng-click="approve(date.approveDate)">{{'label.button.confirm' | translate}}</button>
 				        </div>
 			    	</script>
 				    <table ng-repeat="office in offices" class="table condensed-table">
@@ -272,7 +279,7 @@
 				                    <thead>
 				                    <tr class="graybg">
 				                        <th><input type="checkbox" ng-click="loanApprovalAllCheckBoxesClicked(office)" ng-checked="loanApprovalAllCheckBoxesMet(office)"/></th>
-				                        <th>{{'label.heading.client' | translate}}</th>
+				                        <th>{{'label.heading.client' | translate}} &nbsp;&nbsp;&nbsp;&nbsp; ({{'label.input.centerName'|translate}}  / {{'label.input.groupName'|translate}})</th></th>
 				                        <th>{{'label.heading.loan' | translate}}</th>
 				                        <th>{{'label.heading.amount' | translate}}</th>
 				                        <th>{{'label.heading.loanpurpose' | translate}}</th>
@@ -280,9 +287,14 @@
 				                    </thead>
 				                    <tbody>
 				                    <tr ng-repeat="loan in office.loans | filter:filterText1">
-				                        <td><input type="checkbox" ng-model="loanTemplate[loan.id]"></td>
-				                        <td class="pointer"><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}}</a></td>
-				                        <td class="pointer"><a href='#/viewloanaccount/{{loan.id}}'>{{loan.loanProductName}}({{loan.accountNo}})</a>
+				                        <td><input type="checkbox" ng-model="loanTemplate[loan.id]"/></td>
+										<!--
+										ng-if="client.centerName && client.groupName">{{client.displayName}} &nbsp;&nbsp;&nbsp;&nbsp; ({{client.centerName}} &nbsp; / &nbsp; {{client.groupName}})
+				                        -->
+				                        <td class="pointer"  ng-if="loan.centerName && loan.group.name "><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}} &nbsp;&nbsp; ( {{loan.centerName}} &nbsp;/&nbsp; {{loan.group.name}}) </a></td>
+										<td class="pointer" ng-if="!loan.centerName && loan.group.name "><a href='#/viewclient/{{loan.clientId}}' >{{loan.clientName}} &nbsp;&nbsp; ( {{loan.group.name}}) </a></td>
+										<td class="pointer"  ng-if=" !loan.centerName && !loan.group.name "><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}}</a></td>
+										<td class="pointer"><a href='#/viewloanaccount/{{loan.id}}'>{{loan.loanProductName}}({{loan.accountNo}})</a>
 				                        </td>
 				                        <td class="pointer">{{loan.principal | number}}</td>
 				                        <td class="pointer">{{loan.loanPurposeName}}</td>
@@ -291,6 +303,7 @@
 				                </table>
 				            </td>
 				        </tr>
+
 				    </table>
 				</tab>
 				<tab heading="{{'label.heading.loandisbursal' | translate}}" has-permission='READ_LOAN'>
@@ -315,11 +328,19 @@
 				        <div class="modal-header silver">
 				            <h3 class="bolder">{{'label.heading.disburse' | translate}}</h3>
 				        </div>
-				        <div class="modal-body">
-				            <api-validate></api-validate>
+						<div class="modal-body modal-big">
+
+							<br>
+							<tr><td>{{'label.heading.disbursedondate'|translate}}</td><td>
+							<input type="text" datepicker-pop="dd MMMM yyyy" ng-model="date.disburseDate" is-open="opened"
+								   max="restrictDate"/></td>
+							</tr>
+						</div>
+				        <div class="modal-footer">
+
 				            <br>
 				            <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
-				            <button class="btn btn-primary" ng-click="disburse()">{{'label.button.confirm' | translate}}</button>
+				            <button class="btn btn-primary" ng-click="disburse(date.disburseDate)">{{'label.button.confirm' | translate}}</button>
 				        </div>
 			    	</script>
 				    <div>
@@ -327,7 +348,7 @@
 				            <thead>
 				            <tr class="graybg">
 				            	<th><input type="checkbox" ng-click="loanDisbursalAllCheckBoxesClicked()" ng-checked="loanDisbursalAllCheckBoxesMet()"/></th>
-				                <th>{{'label.heading.client' | translate}}</th>
+				                <th>{{'label.heading.client' | translate}}&nbsp;&nbsp; ({{'label.input.centerName'|translate}}  / {{'label.input.groupName'|translate}})</th>
 				                <th>{{'label.heading.loanaccountnum' | translate}}</th>
 				                <th>{{'label.heading.loanproduct' | translate}}</th>
 				                <th>{{'label.heading.principal' | translate}}</th>
@@ -336,8 +357,10 @@
 				            <tbody>
 				            <tr ng-repeat="loan in loans | filter : {status.waitingForDisbursal :'true' }| filter:filterText2">
 				            	<td><input type="checkbox" ng-model="loanDisbursalTemplate[loan.id]"></td>
-				                <td><a href="#/viewclient/{{loan.clientId}}">{{loan.clientName}}</a></td>
-				                <td><a href="#/viewloanaccount/{{loan.id}}">{{loan.accountNo}}</a></td>
+								<td class="pointer"  ng-if="loan.group.name && loan.centerName"><a href='#/viewclient/{{loan.clientId}}'>{{loan.clientName}} &nbsp;&nbsp; ( {{loan.centerName}} &nbsp;/&nbsp; {{loan.group.name}}) </a></td>
+								<td class="pointer" ng-if="loan.group.name && !loan.centerName"><a href='#/viewclient/{{loan.clientId}}' >{{loan.clientName}} &nbsp;&nbsp;( {{loan.group.name}}) </a></td>
+								<td class="pointer" ng-if="!loan.group.name && !loan.centerName"><a href='#/viewclient/{{loan.clientId}}' >{{loan.clientName}}</a></td>
+								<td><a href="#/viewloanaccount/{{loan.id}}">{{loan.accountNo}}</a></td>
 				                <td><a href="#/viewloanaccount/{{loan.id}}">{{loan.loanProductName}}</a></td>
 				                <td>{{loan.principal | number}}</td>
 				            </tr>
