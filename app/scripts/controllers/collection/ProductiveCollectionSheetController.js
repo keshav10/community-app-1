@@ -18,6 +18,8 @@
             scope.meetingDate = routeParams.meetingDate;
             var submittedStaffId = [];
             scope.details = false;
+            scope.showPaymentDetails = false;
+
 
             resourceFactory.centerResource.getAllMeetingFallCenters(params, function (data) {
                 if (data[0]) {
@@ -29,6 +31,17 @@
                 }
             });
 
+            scope.showPaymentDetailsFn = function () {
+                var paymentDetail = {};
+                scope.showPaymentDetails = true;
+                paymentDetail.paymentTypeId = "";
+                paymentDetail.accountNumber = "";
+                paymentDetail.checkNumber = "";
+                paymentDetail.routingCode = "";
+                paymentDetail.receiptNumber = "";
+                paymentDetail.bankNumber = "";
+          };
+            
             scope.detailsShow = function() {
                 if (scope.details) {
                     scope.details = false;
@@ -295,6 +308,14 @@
                 scope.formData.bulkDisbursementTransactions = [];
                 scope.formData.bulkRepaymentTransactions = scope.bulkRepaymentTransactions;
                 scope.formData.bulkSavingsDueTransactions = scope.bulkSavingsDueTransactions;
+                if(scope.showPaymentDetails && scope.paymentDetail.paymentTypeId != ""){
+                    scope.formData.paymentTypeId = scope.paymentDetail.paymentTypeId;
+                    scope.formData.accountNumber = scope.paymentDetail.accountNumber;
+                    scope.formData.checkNumber = scope.paymentDetail.checkNumber;
+                    scope.formData.routingCode =scope.paymentDetail.routingCode;
+                    scope.formData.receiptNumber = scope.paymentDetail.receiptNumber;
+                    scope.formData.bankNumber = scope.paymentDetail.bankNumber;
+                }
 
                 resourceFactory.centerResource.save({'centerId': scope.centerId, command: 'saveCollectionSheet'}, scope.formData, function (data) {
                     for (var i = 0; i < centerIdArray.length; i++) {
@@ -314,12 +335,15 @@
                     }
                     for (var i = 0; i < centerIdArray.length; i++) {
                         if (!scope.staffCenterData[i].submitted) {
+                            scope.showPaymentDetails = false;
+							scope.paymentDetail=null;
                             scope.getAllGroupsByCenter(deepCopy(scope.staffCenterData[i].id), deepCopy(scope.staffCenterData[i].collectionMeetingCalendar.id));
                             break;
                         }
                     }
                     
                 });
+
             };
         }
     });
