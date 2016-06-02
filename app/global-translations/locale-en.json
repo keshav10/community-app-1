@@ -3033,6 +3033,9 @@
     "validation.msg.savingsaccount.posting.period.type.is.less.than.compound.period.type":"Saving Account Posting period cannot be less than compounding period",
     "validation.msg.fixeddepositaccount.posting.period.type.is.less.than.compound.period.type":"Fixed Deposit Posting period cannot be less than compounding period",
     "validation.msg.recurringdepositaccount.posting.period.type.is.less.than.compound.period.type":"Recurring Deposit Posting period cannot be less than compounding period",
+    "validation.msg.meetingdatebeforelastmeetingDate.":"Meeting Date should be after {{params[0].value}}",
+
+
 
 
 
